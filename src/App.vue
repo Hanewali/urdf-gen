@@ -1,16 +1,15 @@
 <script setup lang="ts">
+import RobotParts from '@/components/robot-parts.vue'
+import Buttons from '@/components/buttons.vue'
+import AppHeader from '@/components/AppHeader.vue'
 </script>
 
 <template>
-  <div class="border-b-2 w-auto h-auto bg-gray-100 p-1">
-    <a href="/" class="size-8 font-bold ml-3">URDF Generator</a>
-  </div>
+  <app-header />
 
-  <main>
-
+  <main class="flex pt-3">
+    <robot-parts/>
+    <buttons/>
   </main>
 </template>
 
-<style scoped>
-
-</style>
