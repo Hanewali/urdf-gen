@@ -1,5 +1,7 @@
-<script setup lang="ts">
-
+<script lang="ts">
+export default {
+  name: "app-robot-parts"
+}
 </script>
 
 <template>
