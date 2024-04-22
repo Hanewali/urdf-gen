@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import RobotParts from '@/components/robot-parts.vue'
-import Buttons from '@/components/buttons.vue'
+import RobotParts from '@/components/RobotParts.vue'
+import Buttons from '@/components/BaseButtons.vue'
 import AppHeader from '@/components/AppHeader.vue'
 </script>
 
