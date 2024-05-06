@@ -3,7 +3,7 @@ import type { Link } from '@/models/link'
 import type { Joint } from '@/models/joint'
 import { PartType } from '@/enums/PartType'
 import { ref } from 'vue'
-import type { RobotPart } from '@/models/robotPart'
+import type { Visual } from '@/models/visual'
 
 export const usePartsStore = defineStore('parts', {
   state: () => ({
@@ -12,49 +12,50 @@ export const usePartsStore = defineStore('parts', {
     newVisualId: ref(0)
   }),
   getters: {
-    getParts(){
+    getParts() : (Link | Joint)[] {
       return this.parts;
     },
-    getPartsCount(){
+    getPartsCount() : number{
       return this.parts.length;
     },
-    getLinks(){
+    getLinks() : Link[]{
       return this.parts.filter(part => part.type === PartType.Link) as Link[]
     },
-    getJoints(){
+    getJoints() : Joint[]{
       return this.parts.filter(part => part.type === PartType.Joint) as Joint[]
     },
     getPart: (state) => (id: number) => {
       return state.parts.find(part => part.id === id)
     },
     getPartVisuals: (state) => (id: number) => {
-      return state.parts.find(part => part.id === id)?.visuals
+      //cast type to link before accessing visuals
+      return (state.parts.find(part => part.id === id) as Link).visuals;
     },
     getVisual: (state) => (linkId: number, visualId: number) => {
-      return state.parts.find(part => part.id === linkId)?.visuals.find(visual => visual.id === visualId)
+      return (state.parts.find(part => part.id === linkId) as Link).visuals.find(visual => visual.id === visualId);
     }
   },
   actions: {
-    setParts(parts: RobotPart[]){
+    setParts(parts: (Link | Joint)[]){
       this.parts = parts
     },
     addLink(){
       this.parts.push({
-        id: newPartId.value,
-        name: `link_${newPartId.value}`,
+        id: this.newPartId,
+        name: `link_${this.newPartId}`,
         type: PartType.Link,
         visuals: []
       } as Link)
 
-      newPartId.value++
+      this.newPartId++
     },
     addJoint(){
       this.parts.push({
-        id: newPartId.value,
-        name: `joint_${newPartId.value}`
+        id: this.newPartId,
+        name: `joint_${this.newPartId}`
       } as Joint)
 
-      newPartId.value++
+      this.newPartId++
     },
     updatePart(id: number, newPart: Link | Joint){
       let part = this.parts.find(part => part.id === id)
@@ -64,26 +65,20 @@ export const usePartsStore = defineStore('parts', {
     },
     removePart(id: number){
       this.parts.splice(this.parts.findIndex(part => part.id === id), 1)
-
-      for (const visual in visuals) {
-        if (visual.linkId === id) {
-          removeVisual(visual.id)
-        }
-      }
     },
     addVisual(linkId: number){
-      this.parts.find(part => part.id === linkId)?.visuals.push({
-        id: newVisualId.value,
-        name: 'Visual' + newVisualId.value,
-      })
+      (this.parts.find(part => part.id === linkId) as Link)?.visuals.push({
+        id: this.newVisualId,
+        name: 'Visual' + this.newVisualId,
+      } as Visual)
 
-      newVisualId.value++;
+      this.newVisualId++;
     },
     removeVisual(linkId: number, visualId: number){
-      this.parts.find(part => part.id === linkId)?.visuals.splice(this.parts.find(part => part.id === linkId)?.visuals.findIndex(visual => visual.id === visualId), 1)
+      (this.parts.find(part => part.id === linkId) as Link)?.visuals.splice((this.parts.find(part => part.id === linkId) as Link)?.visuals.findIndex(visual => visual.id === visualId), 1)
     },
     updateVisual(linkId: number, visualId: number, newVisual: Visual){
-      let visual = this.parts.find(part => part.id === linkId)?.visuals.find(visual => visual.id === visualId)
+      let visual = (this.parts.find(part => part.id === linkId) as Link)?.visuals.find(visual => visual.id === visualId)
       if (visual) {
         visual = newVisual;
       }

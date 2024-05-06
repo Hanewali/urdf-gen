@@ -3,14 +3,13 @@ import { onBeforeMount, onUpdated, watch } from 'vue'
 import { PartType } from '@/enums/PartType'
 import LinkPart from '@/components/LinkPart.vue'
 import { usePartsStore } from '@/stores/PartsStore'
-import { storeToRefs } from 'pinia'
 
 const props = defineProps<{
   deleteParts: boolean,
 }>()
 
-const store = usePartsStore;
-const {addLink, addJoint, removePart, getParts, setParts, getPartsCount } = storeToRefs(store)
+const store = usePartsStore();
+const {addLink, addJoint, removePart, getParts, setParts, getPartsCount } = store;
 
 const emit = defineEmits(['removed']);
 
@@ -20,21 +19,22 @@ watch(() => props.deleteParts, () => {
   emit('removed');
 })
 
-watch(() => store.getParts, (parts) => {
-  sessionStorage.setItem('parts', JSON.stringify(store.getParts()))
+onBeforeMount(() => {
+ if(localStorage.getItem('parts')){
+   store.$patch(JSON.parse(localStorage.getItem('parts') ?? ''));
+ }
 })
 
-onBeforeMount(() => {
-  if(sessionStorage.getItem('parts')){
-    store.$patch(JSON.parse(sessionStorage.getItem('parts')));
-  }
-})
+store.$subscribe((mutation, state) => {
+  console.log(state);
+  localStorage.setItem('parts', JSON.stringify(state));
+});
 
 </script>
 
 <template>
   <div class="bg-gray-100 rounded-3xl m-auto w-[65%] h-[90vh] overflow-auto">
-    <div v-for="part in store.getParts()" :key="part.id">
+    <div v-for="part in store.getParts" :key="part.id">
       <LinkPart v-if="part.type == PartType.Link" :part="part" :key="part.id" @remove="store.removePart(part.id)"/>
     </div>
     <div class="flex justify-center">
