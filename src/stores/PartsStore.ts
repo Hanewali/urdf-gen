@@ -3,6 +3,7 @@ import type { Link } from '@/models/link'
 import type { Joint } from '@/models/joint'
 import { PartType } from '@/enums/PartType'
 import { ref } from 'vue'
+import type { RobotPart } from '@/models/robotPart'
 
 export const usePartsStore = defineStore('parts', {
   state: () => ({
@@ -12,7 +13,10 @@ export const usePartsStore = defineStore('parts', {
   }),
   getters: {
     getParts(){
-      return this.parts
+      return this.parts;
+    },
+    getPartsCount(){
+      return this.parts.length;
     },
     getLinks(){
       return this.parts.filter(part => part.type === PartType.Link) as Link[]
@@ -31,6 +35,9 @@ export const usePartsStore = defineStore('parts', {
     }
   },
   actions: {
+    setParts(parts: RobotPart[]){
+      this.parts = parts
+    },
     addLink(){
       this.parts.push({
         id: newPartId.value,
@@ -48,6 +55,12 @@ export const usePartsStore = defineStore('parts', {
       } as Joint)
 
       newPartId.value++
+    },
+    updatePart(id: number, newPart: Link | Joint){
+      let part = this.parts.find(part => part.id === id)
+      if (part) {
+        part = newPart
+      }
     },
     removePart(id: number){
       this.parts.splice(this.parts.findIndex(part => part.id === id), 1)
