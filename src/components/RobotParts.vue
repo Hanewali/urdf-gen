@@ -26,7 +26,6 @@ onBeforeMount(() => {
 })
 
 store.$subscribe((mutation, state) => {
-  console.log(state);
   localStorage.setItem('parts', JSON.stringify(state));
 });
 
