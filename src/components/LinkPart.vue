@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { Link } from '@/models/link'
 import Visual from '@/components/Visual.vue'
 
