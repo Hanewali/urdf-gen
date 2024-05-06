@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import type { Link } from '@/models/link'
-import { GeometryType } from '@/enums/geometryType'
-import Visual from '@/components/Visual/Visual.vue'
+import Visual from '@/components/Visual.vue'
 
 const props = defineProps<{
   part: Link,

@@ -2,7 +2,7 @@
 
 import { GeometryType } from '@/enums/geometryType'
 import type { Visual } from '@/models/visual'
-import Origin from '@/components/Visual/Origin.vue'
+import Origin from '@/components/Shared/Origin.vue'
 
 const props = defineProps<{
   visual: Visual,
@@ -18,7 +18,7 @@ const props = defineProps<{
     <input type="text" class="col-span-2 rounded-xl bg-gray-200 px-4 my-auto" :value="visual.name" />
   </div>
   <div class="grid grid-cols-12 space-x-2">
-    <origin :origin="visual.origin"/>
+<!--    <origin :origin="visual.origin"/>-->
 <!--    <geometry/>-->
 <!--    <material/>-->
   </div>
