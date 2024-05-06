@@ -24,7 +24,7 @@ export const usePartsStore = defineStore('parts', {
     getJoints() : Joint[]{
       return this.parts.filter(part => part.type === PartType.Joint) as Joint[]
     },
-    getPart: (state) => (id: number) => {
+    getPart: (state)  => (id: number)  =>  {
       return state.parts.find(part => part.id === id)
     },
     getPartVisuals: (state) => (id: number) => {
@@ -57,8 +57,8 @@ export const usePartsStore = defineStore('parts', {
 
       this.newPartId++
     },
-    updatePart(id: number, newPart: Link | Joint){
-      let part = this.parts.find(part => part.id === id)
+    updatePart(newPart: Link | Joint){
+      let part = this.parts.find(part => part.id === newPart.id)
       if (part) {
         part = newPart
       }

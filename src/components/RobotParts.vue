@@ -34,7 +34,7 @@ store.$subscribe((mutation, state) => {
 <template>
   <div class="bg-gray-100 rounded-3xl m-auto w-[65%] h-[90vh] overflow-auto">
     <div v-for="part in store.getParts" :key="part.id">
-      <LinkPart v-if="part.type == PartType.Link" :part="part" :key="part.id" @remove="store.removePart(part.id)"/>
+      <LinkPart v-if="part.type == PartType.Link" :partId="part.id" :key="part.id" @remove="store.removePart(part.id)"/>
     </div>
     <div class="flex justify-center">
       <button @click="store.addLink()" class="w-40 h-10 bg-green-500 hover:bg-green-700 rounded-xl" :class="{'mt-4' : getPartsCount == 0}">Add Link</button>
