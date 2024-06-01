@@ -29,7 +29,7 @@ onUpdated(() => {
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-2">
           <label>Color</label>
-          <input type="color" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+          <input type="color" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" v-model="material.color" />
         </div>
       </div>
     </div>

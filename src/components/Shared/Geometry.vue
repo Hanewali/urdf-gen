@@ -3,6 +3,7 @@
 import { GeometryType } from '@/enums/geometryType'
 import type { Geometry } from '@/models/geometry'
 import { usePartsStore } from '@/stores/PartsStore'
+import { onUpdated } from 'vue'
 
 const store = usePartsStore();
 
@@ -11,6 +12,10 @@ const props = defineProps<{
 }>()
 
 const geometry = store.getGeometry(props.visualId) as Geometry;
+
+onUpdated(() => {
+  store.updateGeometry(props.visualId, geometry);
+});
 
 </script>
 
@@ -27,31 +32,31 @@ const geometry = store.getGeometry(props.visualId) as Geometry;
         <div class="space-y-2" v-if="geometry?.type === 'Box'">
           <div>
             <label>size x</label>
-            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10 text-center" v-model="geometry.size.x" />
           </div>
           <div>
             <label>size y</label>
-            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10 text-center" v-model="geometry.size.y" />
           </div>
           <div>
             <label>size z</label>
-            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10 text-center" v-model="geometry.size.z" />
           </div>
         </div>
         <div class="space-y-2" v-if="geometry.type === 'Cylinder'">
           <div>
             <label>radius</label>
-            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10 text-center" v-model="geometry.radius" />
           </div>
           <div>
             <label>length</label>
-            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10 text-center" v-model="geometry.length" />
           </div>
         </div>
         <div class="space-y-2" v-if="geometry.type === 'Sphere'">
           <div>
             <label>radius</label>
-            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10" />
+            <input type="number" class="rounded-xl bg-gray-200 px-1 ml-4 w-10 text-center" v-model="geometry.radius" />
           </div>
       </div>
     </div>

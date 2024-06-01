@@ -32,7 +32,7 @@ onUpdated(() => {
       <p class="col-span-1 col-start-3 pt-1">Name:</p>
       <input type="text" class="col-span-2 rounded-xl bg-gray-200 px-4 my-auto" v-model="visual.name" />
     </div>
-    <button class="rounded-3xl bg-red-500 hover:bg-red-700 mt-4 mb-0 h-8 mx-4 px-4 text-white col-span-1" @click="removeVisual(visualId)"><i class="fa-solid fa-x"/></button>
+    <button class="rounded-3xl bg-red-500 hover:bg-red-700 mt-2 mb-2 h-8 ml-auto mr-2 px-4 text-white col-span-1" @click="removeVisual(visualId)"><i class="fa-solid fa-x"/></button>
   </div>
   <div class="grid grid-cols-12 space-x-2">
     <origin :visualId="visualId"/>

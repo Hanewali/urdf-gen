@@ -105,7 +105,10 @@ export const usePartsStore = defineStore('parts', {
       this.geometries.push({
         id: this.newGeometryId,
         visualId: this.newVisualId,
-        type: GeometryType.Box
+        type: GeometryType.Box,
+        size: { x: 0, y: 0, z: 0 },
+        radius: 0,
+        length: 0
       } as Geometry)
 
       this.materials.push({
@@ -123,27 +126,27 @@ export const usePartsStore = defineStore('parts', {
       this.visuals.splice(this.visuals.findIndex(visual => visual.id === visualId), 1)
     },
     updateVisual (linkId: number, visualId: number, newVisual: Visual) {
-      let visual = this.visuals.find(visual => visual.linkId === linkId && visual.id === visualId)
-      if (visual) {
-        visual = newVisual
+      const index = this.visuals.findIndex(visual => visual.linkId === linkId && visual.id === visualId)
+      if (newVisual) {
+        this.visuals[index] = newVisual
       }
     },
     updateOrigin (visualId: number, newOrigin: Origin) {
-      let origin = this.origins.find(origin => origin.visualId === visualId && origin.id === newOrigin.id)
-      if (origin) {
-        origin = newOrigin
+      const index = this.origins.findIndex(origin => origin.visualId === visualId && origin.id === newOrigin.id)
+      if (newOrigin) {
+        this.origins[index] = newOrigin
       }
     },
     updateGeometry (visualId: number, newGeometry: Geometry) {
-      let geometry = this.geometries.find(geometry => geometry.visualId === visualId && geometry.id === newGeometry.id)
-      if (geometry) {
-        geometry = newGeometry
+      const index = this.geometries.findIndex(geometry => geometry.visualId === visualId && geometry.id === newGeometry.id)
+      if (newGeometry) {
+        this.geometries[index] = newGeometry
       }
     },
     updateMaterial (visualId: number, newMaterial: Material) {
-      let material = this.materials.find(material => material.visualId === visualId && material.id === newMaterial.id)
-      if (material) {
-        material = newMaterial
+      const index = this.materials.findIndex(material => material.visualId === visualId && material.id === newMaterial.id)
+      if (newMaterial) {
+        this.materials[index] = newMaterial
       }
     }
   }
