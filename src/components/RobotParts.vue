@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeMount, onUpdated, watch } from 'vue'
+import { onBeforeMount, watch } from 'vue'
 import { PartType } from '@/enums/PartType'
 import LinkPart from '@/components/LinkPart.vue'
 import { usePartsStore } from '@/stores/PartsStore'
@@ -9,7 +9,7 @@ const props = defineProps<{
 }>()
 
 const store = usePartsStore();
-const {addLink, addJoint, removePart, getParts, setParts, getPartsCount } = store;
+const {addLink, addJoint, removePart, getPartsCount } = store;
 
 const emit = defineEmits(['removed']);
 
@@ -34,11 +34,11 @@ store.$subscribe((mutation, state) => {
 <template>
   <div class="bg-gray-100 rounded-3xl m-auto w-[65%] h-[90vh] overflow-auto">
     <div v-for="part in store.getParts" :key="part.id">
-      <LinkPart v-if="part.type == PartType.Link" :partId="part.id" :key="part.id" @remove="store.removePart(part.id)"/>
+      <LinkPart v-if="part.type == PartType.Link" :partId="part.id" :key="part.id" @remove="removePart(part.id)"/>
     </div>
     <div class="flex justify-center">
-      <button @click="store.addLink()" class="w-40 h-10 bg-green-500 hover:bg-green-700 rounded-xl" :class="{'mt-4' : getPartsCount == 0}">Add Link</button>
-      <button @click="store.addJoint()" class="w-40 h-10 bg-green-500 hover:bg-green-700 rounded-xl" :class="{'mt-4' : getPartsCount == 0}">Add Joint</button>
+      <button @click="addLink()" class="w-40 h-10 bg-green-500 hover:bg-green-700 rounded-xl" :class="{'mt-4' : getPartsCount == 0}">Add Link</button>
+      <button @click="addJoint()" class="w-40 h-10 bg-green-500 hover:bg-green-700 rounded-xl" :class="{'mt-4' : getPartsCount == 0}">Add Joint</button>
     </div>
   </div>
 </template>

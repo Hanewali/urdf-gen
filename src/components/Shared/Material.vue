@@ -1,9 +1,27 @@
 <script setup lang="ts">
 
+import type { Material } from '@/models/material'
+import { usePartsStore } from '@/stores/PartsStore'
+import { onUpdated } from 'vue'
+
+const props = defineProps<{
+  visualId: number
+}>()
+
+const store = usePartsStore();
+
+const {getMaterial, updateMaterial} = store;
+
+const material = getMaterial(props.visualId) as Material;
+
+onUpdated(() => {
+  updateMaterial(props.visualId, material);
+});
+
 </script>
 
 <template>
-  <div class="grid bg-gray-100 rounded-xl space-y-4 p-2 col-span-2">
+  <div class="grid col-span-4 bg-gray-100 rounded-xl space-y-4 p-2">
     <div>
       <h2 class="font-bold">Material</h2>
     </div>

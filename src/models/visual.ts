@@ -6,7 +6,4 @@ export interface Visual {
   id: number;
   linkId: number;
   name: string;
-  origin?: Origin;
-  geometry?: Geometry;
-  material?: Material;
 }
