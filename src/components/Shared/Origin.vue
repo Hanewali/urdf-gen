@@ -3,19 +3,21 @@
 import type { Origin } from '@/models/origin'
 import { usePartsStore } from '@/stores/PartsStore'
 import { onUpdated } from 'vue'
+import type { OriginParentType } from '@/enums/OriginParentType'
 
 const props = defineProps<{
-  visualId: number
+  parentId: number,
+  parentType: OriginParentType
 }>()
 
 const store = usePartsStore();
 
 const {getOrigin, updateOrigin} = store;
 
-const origin = getOrigin(props.visualId) as Origin;
+const origin = getOrigin(props.parentId, props.parentType) as Origin;
 
 onUpdated(() => {
-  updateOrigin(props.visualId, origin);
+  updateOrigin(origin);
 });
 
 </script>

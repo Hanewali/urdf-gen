@@ -23,7 +23,7 @@ onUpdated(() => {
   <div class="grid col-span-4 bg-gray-100 rounded-xl space-y-4 p-2">
     <div class="flex items-center mb-auto">
       <h2 class="font-bold">Geometry</h2>
-      <select v-model="geometry.type" class="rounded-3xl bg-gray-100 border-2 border-gray-300 ml-7">
+      <select v-model="geometry.type" class="rounded-3xl bg-gray-200 border-2 border-gray-300 ml-7 pl-2 text-left">
         <option v-for="type in [GeometryType.Box, GeometryType.Sphere, GeometryType.Cylinder]" :key="type" :value="type">{{ type }} </option>
       </select>
     </div>

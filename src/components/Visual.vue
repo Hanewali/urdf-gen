@@ -6,6 +6,7 @@ import Origin from '@/components/Shared/Origin.vue'
 import { onUpdated } from 'vue'
 import Geometry from '@/components/Shared/Geometry.vue'
 import Material from '@/components/Shared/Material.vue'
+import { OriginParentType } from '@/enums/OriginParentType'
 
 const props = defineProps<{
   partId: number,
@@ -35,7 +36,7 @@ onUpdated(() => {
     <button class="rounded-3xl bg-red-500 hover:bg-red-700 mt-2 mb-2 h-8 ml-auto mr-2 px-4 text-white col-span-1" @click="removeVisual(visualId)"><i class="fa-solid fa-x"/></button>
   </div>
   <div class="grid grid-cols-12 space-x-2">
-    <origin :visualId="visualId"/>
+    <origin :parentId="visualId" :parentType="OriginParentType.Visual"/>
     <geometry :visualId="visualId"/>
     <material  :visualId="visualId"/>
   </div>

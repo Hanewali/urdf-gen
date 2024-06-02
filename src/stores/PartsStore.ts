@@ -8,6 +8,10 @@ import type { Origin } from '@/models/origin'
 import type { Geometry } from '@/models/geometry'
 import type { Material } from '@/models/material'
 import { GeometryType } from '@/enums/geometryType'
+import { OriginParentType } from '@/enums/OriginParentType'
+import type { JointLimit } from '@/models/jointLimit'
+import type { Xyz } from '@/models/xyz'
+import type { Axis } from '@/models/axis'
 
 export const usePartsStore = defineStore('parts', {
   state: () => ({
@@ -16,11 +20,15 @@ export const usePartsStore = defineStore('parts', {
     origins: ref<Origin[]>([]),
     geometries: ref<Geometry[]>([]),
     materials: ref<Material[]>([]),
+    jointLimits: ref<JointLimit[]>([]),
+    axi: ref<Axis[]>([]),
     newPartId: 0,
     newVisualId: 0,
     newOriginId: 0,
     newGeometryId: 0,
-    newMaterialId: 0
+    newMaterialId: 0,
+    newJointLimitId: 0,
+    newAxisId: 0
   }),
   getters: {
     getParts (state): (Link | Joint)[] {
@@ -47,20 +55,23 @@ export const usePartsStore = defineStore('parts', {
     getVisual (state): (linkId: number, visualId: number) => Visual | undefined {
       return (linkId: number, visualId: number) => state.visuals.find(visual => visual.linkId === linkId && visual.id === visualId)
     },
-    getOrigin (state): (visualId: number) => Origin | undefined {
-      return (visualId: number) => state.origins.find(origin => origin.visualId === visualId)
+    getOrigin (state): (parentId: number, parentType: OriginParentType) => Origin | undefined {
+      return (parentId: number, parentType: OriginParentType) => state.origins.find(origin => origin.parentId === parentId && origin.parentType === parentType)
     },
     getGeometry (state): (visualId: number) => Geometry | undefined {
       return (visualId: number) => state.geometries.find(geometry => geometry.visualId === visualId)
     },
     getMaterial (state): (visualId: number) => Material | undefined {
       return (visualId: number) => state.materials.find(material => material.visualId === visualId)
+    },
+    getJointLimit (state): (jointId: number) => JointLimit | undefined {
+      return (jointId: number) => state.jointLimits.find(jointLimit => jointLimit.jointId === jointId)
+    },
+    getAxis(state): (jointId: number) => Axis | undefined {
+      return (jointId: number) => state.axi.find(axis => axis.jointId === jointId)
     }
   },
   actions: {
-    setParts (parts: (Link | Joint)[]) {
-      this.parts = parts
-    },
     addLink () {
       this.parts.push({
         id: this.newPartId,
@@ -74,15 +85,44 @@ export const usePartsStore = defineStore('parts', {
     addJoint () {
       this.parts.push({
         id: this.newPartId,
-        name: `joint_${this.newPartId}`
+        name: `joint_${this.newPartId}`,
+        type: PartType.Joint,
       } as Joint)
 
+      this.origins.push({
+        id: this.newOriginId,
+        parentId: this.newPartId,
+        xyz: { x: 0, y: 0, z: 0 },
+        rpy: { roll: 0, pitch: 0, yaw: 0 },
+        parentType: OriginParentType.Joint
+      } as Origin)
+
+      this.jointLimits.push({
+        id: this.newJointLimitId,
+        jointId: this.newPartId,
+        lower: 0,
+        upper: 0,
+        effort: 0,
+        velocity: 0
+      } as JointLimit)
+
+      this.axi.push({
+        id: this.newAxisId,
+        jointId: this.newPartId,
+        x: 0,
+        y: 0,
+        z: 0
+      } as Axis)
+
+      this.newOriginId++;
+      this.newJointLimitId++;
+      this.newAxisId++;
       this.newPartId++
     },
     updatePart (newPart: Link | Joint) {
-      let part = this.parts.find(part => part.id === newPart.id)
-      if (part) {
-        part = newPart
+      const index = this.parts.findIndex(part => part.id === newPart.id)
+      if (newPart) {
+        this.parts[index] = newPart
       }
     },
     removePart (id: number) {
@@ -97,9 +137,10 @@ export const usePartsStore = defineStore('parts', {
 
       this.origins.push({
         id: this.newOriginId,
-        visualId: this.newVisualId,
+        parentId: this.newVisualId,
         xyz: { x: 0, y: 0, z: 0 },
-        rpy: { roll: 0, pitch: 0, yaw: 0 }
+        rpy: { roll: 0, pitch: 0, yaw: 0 },
+        parentType: OriginParentType.Visual
       } as Origin)
 
       this.geometries.push({
@@ -131,8 +172,8 @@ export const usePartsStore = defineStore('parts', {
         this.visuals[index] = newVisual
       }
     },
-    updateOrigin (visualId: number, newOrigin: Origin) {
-      const index = this.origins.findIndex(origin => origin.visualId === visualId && origin.id === newOrigin.id)
+    updateOrigin (newOrigin: Origin) {
+      const index = this.origins.findIndex(origin => origin.id === newOrigin.id)
       if (newOrigin) {
         this.origins[index] = newOrigin
       }
@@ -147,6 +188,18 @@ export const usePartsStore = defineStore('parts', {
       const index = this.materials.findIndex(material => material.visualId === visualId && material.id === newMaterial.id)
       if (newMaterial) {
         this.materials[index] = newMaterial
+      }
+    },
+    updateJointLimit (newJointLimit: JointLimit) {
+      const index = this.jointLimits.findIndex(jointLimit => jointLimit.id == newJointLimit.id)
+      if (newJointLimit) {
+        this.jointLimits[index] = newJointLimit
+      }
+    },
+    updateAxis (newAxis: Axis) {
+      const index = this.axi.findIndex(axis => axis.id == newAxis.id)
+      if (newAxis) {
+        this.axi[index] = newAxis
       }
     }
   }
