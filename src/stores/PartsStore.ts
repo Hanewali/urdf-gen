@@ -10,7 +10,6 @@ import type { Material } from '@/models/material'
 import { GeometryType } from '@/enums/geometryType'
 import { OriginParentType } from '@/enums/OriginParentType'
 import type { JointLimit } from '@/models/jointLimit'
-import type { Xyz } from '@/models/xyz'
 import type { Axis } from '@/models/axis'
 
 export const usePartsStore = defineStore('parts', {
@@ -46,14 +45,8 @@ export const usePartsStore = defineStore('parts', {
     getPart (state): (id: number) => (Link | Joint) | undefined {
       return (id: number) => state.parts.find(part => part.id === id)
     },
-    getPartVisuals (state): (id: number) => Visual[] {
-      return (id: number) => state.visuals.filter(visual => visual.linkId === id)
-    },
-    getPartVisualsCount (state): (id: number) => number {
-      return (id: number) => state.visuals.filter(visual => visual.linkId === id).length
-    },
-    getVisual (state): (linkId: number, visualId: number) => Visual | undefined {
-      return (linkId: number, visualId: number) => state.visuals.find(visual => visual.linkId === linkId && visual.id === visualId)
+    getVisual (state): (linkId: number) => Visual | undefined {
+      return (linkId: number) => state.visuals.find(visual => visual.linkId === linkId)
     },
     getOrigin (state): (parentId: number, parentType: OriginParentType) => Origin | undefined {
       return (parentId: number, parentType: OriginParentType) => state.origins.find(origin => origin.parentId === parentId && origin.parentType === parentType)
@@ -80,7 +73,39 @@ export const usePartsStore = defineStore('parts', {
         visuals: []
       } as Link)
 
+      this.visuals.push({
+        id: this.newVisualId,
+        linkId: this.newPartId
+      } as Visual)
+
+      this.origins.push({
+        id: this.newOriginId,
+        parentId: this.newVisualId,
+        xyz: { x: 0, y: 0, z: 0 },
+        rpy: { roll: 0, pitch: 0, yaw: 0 },
+        parentType: OriginParentType.Visual
+      } as Origin)
+
+      this.geometries.push({
+        id: this.newGeometryId,
+        visualId: this.newVisualId,
+        type: GeometryType.Box,
+        size: { x: 0, y: 0, z: 0 },
+        radius: 0,
+        length: 0
+      } as Geometry)
+
+      this.materials.push({
+        id: this.newMaterialId,
+        visualId: this.newVisualId,
+        color: '#ffffff'
+      } as Material)
+
       this.newPartId++
+      this.newVisualId++
+      this.newOriginId++
+      this.newGeometryId++
+      this.newMaterialId++
     },
     addJoint () {
       this.parts.push({
@@ -128,46 +153,8 @@ export const usePartsStore = defineStore('parts', {
     removePart (id: number) {
       this.parts.splice(this.parts.findIndex(part => part.id === id), 1)
     },
-    addVisual (linkId: number) {
-      this.visuals.push({
-        id: this.newVisualId,
-        linkId: linkId,
-        name: `visual_${this.newVisualId}`
-      } as Visual)
-
-      this.origins.push({
-        id: this.newOriginId,
-        parentId: this.newVisualId,
-        xyz: { x: 0, y: 0, z: 0 },
-        rpy: { roll: 0, pitch: 0, yaw: 0 },
-        parentType: OriginParentType.Visual
-      } as Origin)
-
-      this.geometries.push({
-        id: this.newGeometryId,
-        visualId: this.newVisualId,
-        type: GeometryType.Box,
-        size: { x: 0, y: 0, z: 0 },
-        radius: 0,
-        length: 0
-      } as Geometry)
-
-      this.materials.push({
-        id: this.newMaterialId,
-        visualId: this.newVisualId,
-        color: '#ffffff'
-      } as Material)
-
-      this.newVisualId++
-      this.newOriginId++
-      this.newGeometryId++
-      this.newMaterialId++
-    },
-    removeVisual (visualId: number) {
-      this.visuals.splice(this.visuals.findIndex(visual => visual.id === visualId), 1)
-    },
-    updateVisual (linkId: number, visualId: number, newVisual: Visual) {
-      const index = this.visuals.findIndex(visual => visual.linkId === linkId && visual.id === visualId)
+    updateVisual (newVisual: Visual) {
+      const index = this.visuals.findIndex(visual => visual.id === newVisual.id)
       if (newVisual) {
         this.visuals[index] = newVisual
       }

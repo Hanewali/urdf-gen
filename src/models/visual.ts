@@ -5,5 +5,4 @@ import type { Material } from '@/models/material'
 export interface Visual {
   id: number;
   linkId: number;
-  name: string;
 }
